@@ -1,0 +1,206 @@
+HK: &HK '(?i)(港|hk|hongkong|香港)'
+JP: &JP '(?i)(日|jp|japan|日本)'
+TW: &TW '(?i)(台|tw|taiwan|台湾)'
+US: &US '(?i)(美|us|america|美国)'
+KR: &KR '(?i)(韩|kr|korea|韩国)'
+SG: &SG '(?i)(新|sg|singapore|新加坡)'
+UK: &UK '(?i)(英|uk|british|英国)'
+
+proxy-providers:
+  LuanYe:
+    url: "你的订阅"
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: DIRECT
+
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+log-level: warning
+global-client-fingerprint: chrome
+keep-alive-idle: 600
+keep-alive-interval: 15
+profile:
+  store-selected: true
+  store-fake-ip: false
+
+external-controller: 127.0.0.1:9090
+secret: "123456"
+external-ui: ui
+external-ui-name: zashboard
+external-ui-url: "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
+
+tun:
+  enable: true
+  stack: mixed
+  dns-hijack:
+    - "0.0.0.0:53"
+    - "tcp://0.0.0.0:53"
+    - "any:53"
+     
+  auto-detect-interface: true
+  auto-route: true
+  auto-redirect: true
+  strict-route: false
+  endpoint-independent-nat: true
+
+sniffer:
+  enable: true
+  sniff:
+    TLS:
+      ports: [443, 8443]
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+  skip-domain:
+    - "+.apple.com"
+    - "+.qq.com"
+    - "+.wechat.com"
+
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - '*.lan'
+    - '*.local'
+    - geosite:cn
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+    - tls://1.12.12.12:853
+  fallback:
+    - tls://8.8.8.8:853
+    - tls://1.1.1.1:853
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+
+LuanYe: &LuanYe {type: select, include-all: true}
+LuanYe1: &LuanYe1 {type: fallback, include-all: true, url: 'https://www.g.cn/generate_204', interval: 300, lazy: false, timeout: 2000, max-failed-times: 3, hidden: true}
+LuanYe2: &LuanYe2 {type: url-test, include-all: true, url: 'https://www.g.cn/generate_204', interval: 300, tolerance: 50, lazy: false, timeout: 2000, max-failed-times: 3, hidden: true}
+LuanYeYe: &LuanYeYe {
+  type: select,
+  proxies: [香港故转, 台湾故转, 日本故转, 韩国故转, 新加坡故转, 美国故转,香港自动, 台湾自动, 日本自动, 韩国自动, 新加坡自动, 美国自动,香港手动, 台湾手动, 日本手动,  DIRECT]}
+
+proxy-groups:
+  
+  - {name: 一键代理, <<: *LuanYeYe, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/Rocket.png}
+  - {name: YouTube, <<: *LuanYeYe, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/YouTube.png}
+  - {name: Google, <<: *LuanYeYe, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/Google.png}
+  - {name: twitter, <<: *LuanYeYe, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/Twitter.png}
+  - {name: ChatGPT, <<: *LuanYeYe, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/ChatGPT.png}
+  - {name: GitHub, <<: *LuanYeYe, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/GitHub.png}
+  - {name: Pornhub,  <<: *LuanYeYe, icon: https://raw.githubusercontent.com/Vbaethon/HOMOMIX/main/Icon/Color/Pornhub.png}
+  - {name: Pixiv, <<: *LuanYeYe, icon: https://raw.githubusercontent.com/Vbaethon/HOMOMIX/main/Icon/Color/Pixiv.png}
+  - {name: Telegram, <<: *LuanYeYe, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/Telegram.png}
+  - {name: 漏网之鱼, <<: *LuanYeYe, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/MATCH.png}
+
+  
+  - {name: 香港手动, <<: *LuanYe,   filter: *HK, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/HK.png}
+  - {name: 台湾手动, <<: *LuanYe,   filter: *TW, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/TW.png}
+  - {name: 日本手动, <<: *LuanYe,   filter: *JP, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/JP.png}
+  - {name: 韩国手动, <<: *LuanYe,   filter: *KR, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/KR.png}
+  - {name: 新加坡手动, <<: *LuanYe, filter: *SG, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/SG.png}
+  - {name: 美国手动, <<: *LuanYe,   filter: *US, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/US.png}
+  - {name: 英国手动, <<: *LuanYe,   filter: *UK, icon: https://raw.githubusercontent.com/Vbaethon/HOMOMIX/main/Icon/Color/UK.png}
+
+  - {name: 香港故转, <<: *LuanYe1,   filter: *HK, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/HK.png}
+  - {name: 台湾故转, <<: *LuanYe1,   filter: *TW, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/TW.png}
+  - {name: 日本故转, <<: *LuanYe1,   filter: *JP, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/JP.png}
+  - {name: 韩国故转, <<: *LuanYe1,   filter: *KR, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/KR.png}
+  - {name: 新加坡故转, <<: *LuanYe1, filter: *SG, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/SG.png}
+  - {name: 美国故转, <<: *LuanYe1,   filter: *US, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/US.png}
+  - {name: 英国故转, <<: *LuanYe1,   filter: *UK, icon: https://raw.githubusercontent.com/Vbaethon/HOMOMIX/main/Icon/Color/UK.png}
+
+  
+  - {name: 香港自动, <<: *LuanYe2,   filter: *HK, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/HK.png}
+  - {name: 台湾自动, <<: *LuanYe2,   filter: *TW, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/TW.png}
+  - {name: 日本自动, <<: *LuanYe2,   filter: *JP, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/JP.png}
+  - {name: 韩国自动, <<: *LuanYe2,   filter: *KR, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/KR.png}
+  - {name: 新加坡自动, <<: *LuanYe2, filter: *SG, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/SG.png}
+  - {name: 美国自动, <<: *LuanYe2,   filter: *US, icon: https://github.com/Seven1echo/Yaml/raw/main/icons/US.png}
+  - {name: 英国自动, <<: *LuanYe2,   filter: *UK, icon: https://raw.githubusercontent.com/Vbaethon/HOMOMIX/main/Icon/Color/UK.png}
+
+
+rules:
+  
+  - RULE-SET,LuanYe3,REJECT,no-resolve
+
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,private_domain,DIRECT
+
+  - RULE-SET,apple_domain,DIRECT
+  - RULE-SET,apple_ip,DIRECT
+
+  - RULE-SET,cn_domain,DIRECT
+  - RULE-SET,cn_ip,DIRECT,no-resolve
+
+  - RULE-SET,ai,ChatGPT
+  - RULE-SET,github_domain,GitHub
+  - RULE-SET,youtube_domain,YouTube
+  - RULE-SET,google_domain,Google
+  - RULE-SET,Pixiv_domain,Pixiv
+  - RULE-SET,twitter_domain,twitter
+  - RULE-SET,telegram_domain,Telegram
+  - RULE-SET,PornHub_domain,Pornhub
+
+  - RULE-SET,google_ip,Google,no-resolve
+  - RULE-SET,twitter_ip,twitter,no-resolve
+  - RULE-SET,telegram_ip,Telegram,no-resolve
+
+  - RULE-SET,geolocation-!cn,一键代理,no-resolve
+
+  - RULE-SET,proxylite,一键代理
+
+  - MATCH,漏网之鱼
+
+rule-anchor:
+  ip: &ip {type: http, interval: 86400, behavior: ipcidr, format: mrs}
+  domain: &domain {type: http, interval: 86400, behavior: domain, format: mrs}
+  class: &class {type: http, interval: 86400, behavior: classical, format: text}
+
+rule-providers:
+  fakeipfilter_domain: {<<: *domain, url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs"}
+  private_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
+  proxylite: {<<: *class, url: "https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/main/rules/proxy.list"}
+  ai: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"}
+  youtube_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
+  google_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
+  github_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
+  twitter_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitter.mrs"}
+  telegram_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"}
+  Pixiv_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/pixiv.mrs"}
+  PornHub_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/pornhub.mrs"}
+  apple_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"}
+  geolocation-!cn: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"}
+  cn_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
+
+  private_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"}
+  cn_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
+  google_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+  twitter_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs"}
+  telegram_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
+  apple_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs"}
+
+  LuanYe3:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    interval: 86400
+
+    # https://github.com/MetaCubeX/meta-rules-dat/tree/meta 规则地点
+    # https://github.com/Vbaethon/HOMOMIX 图标地址 
+   
