@@ -88,7 +88,7 @@ sniffer:
     - "+.apple.com"
     - "+.qq.com"
     - "+.wechat.com"
-
+    
 dns:
   enable: true
   listen: 0.0.0.0:1053
@@ -99,7 +99,6 @@ dns:
   proxy-server-nameserver:
     - 223.5.5.5
     - 119.29.29.29
-    - tls://1.12.12.12:853
     - https://dns.alidns.com/dns-query
   default-nameserver:
     - 223.5.5.5
@@ -107,7 +106,6 @@ dns:
   nameserver:
     - 223.5.5.5
     - 119.29.29.29
-    - tls://1.12.12.12:853
     - https://dns.alidns.com/dns-query
   fallback: []
   fallback-filter: {}
@@ -115,6 +113,7 @@ dns:
     - '*.*.lan'
     - '*.*.local'
     - 'geosite:cn'
+    
 proxies: 
   - name: "🟢 直连"
     type: direct
